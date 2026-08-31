@@ -9,11 +9,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css?v=20260831">
 </head>
-<body>
+<body class="bg-desk">
   <main class="wrap">
     <section id="startScreen" class="panel">
       <h1 class="title">Tic Tac Toe</h1>
       <p class="subtitle">pick how long you want to play</p>
+
+      <div class="background-picker">
+        <p class="picker-label">choose your background</p>
+        <div class="background-options" id="backgroundPicker">
+          <button class="background-btn selected" data-background="desk"><span class="background-preview preview-desk"></span><span>wood table</span></button>
+          <button class="background-btn" data-background="notebook"><span class="background-preview preview-notebook"></span><span>notebook</span></button>
+          <button class="background-btn" data-background="wall"><span class="background-preview preview-wall"></span><span>wall</span></button>
+        </div>
+      </div>
+
       <div class="rounds-picker" id="roundsPicker">
         <button class="round-btn" data-rounds="3">3<span>rounds · first to 2</span></button>
         <button class="round-btn" data-rounds="5">5<span>rounds · first to 3</span></button>
@@ -43,6 +53,7 @@
     </section>
   </main>
   <div id="dustLayer" class="dust-layer"></div>
+  <script src="background.js?v=20260831"></script>
   <script src="script.js?v=20260831"></script>
 </body>
 </html>
