@@ -1,1 +1,355 @@
-
+:root {
+  --board: #1f3b2c;
+  --board-dark: #17301f;
+  --chalk: #f4f1e6;
+  --chalk-soft: #b9c4bb;
+  --x-color: #7fd1d9;
+  --o-color: #e8785c;
+  --accent: #e8c468;
+}
+ 
+* {
+  box-sizing: border-box;
+}
+ 
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--board);
+  background-image:
+    radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 4px 4px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--chalk);
+  padding: 24px;
+  overflow-x: hidden;
+}
+ 
+.wrap {
+  width: 100%;
+  max-width: 380px;
+}
+ 
+.panel {
+  border: 2px dashed rgba(244, 241, 230, 0.35);
+  border-radius: 14px;
+  padding: 32px 24px;
+  text-align: center;
+  animation: fadeIn 0.35s ease;
+}
+ 
+.hidden {
+  display: none;
+}
+ 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+ 
+.title {
+  font-family: 'Caveat', cursive;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  line-height: 1;
+}
+ 
+.title.small {
+  font-size: 2.4rem;
+}
+ 
+.subtitle {
+  color: var(--chalk-soft);
+  margin: 0 0 28px;
+  font-size: 0.95rem;
+}
+ 
+.rounds-picker {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+ 
+.round-btn {
+  flex: 1;
+  background: transparent;
+  border: 2px solid rgba(244, 241, 230, 0.4);
+  border-radius: 10px;
+  color: var(--chalk);
+  font-family: 'Caveat', cursive;
+  font-size: 1.8rem;
+  font-weight: 700;
+  padding: 12px 4px 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.1s, background 0.15s;
+}
+ 
+.round-btn span {
+  display: block;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--chalk-soft);
+  letter-spacing: 0.02em;
+}
+ 
+.round-btn:hover {
+  border-color: var(--accent);
+}
+ 
+.round-btn:active {
+  transform: scale(0.96);
+}
+ 
+.round-btn.selected {
+  border-color: var(--accent);
+  background: rgba(232, 196, 104, 0.12);
+}
+ 
+.round-btn.selected span {
+  color: var(--accent);
+}
+ 
+.primary-btn {
+  width: 100%;
+  background: var(--accent);
+  color: #3a2e0e;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.15s;
+}
+ 
+.primary-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+ 
+.primary-btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+ 
+.scorebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+ 
+.score-side {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 56px;
+}
+ 
+.o-side {
+  justify-content: flex-end;
+}
+ 
+.score-label {
+  font-family: 'Caveat', cursive;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+ 
+.x-side .score-label { color: var(--x-color); }
+.o-side .score-label { color: var(--o-color); }
+ 
+.score-num {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.4rem;
+  transition: transform 0.2s;
+}
+ 
+.score-num.bump {
+  transform: scale(1.35);
+}
+ 
+.round-info {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--chalk-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+ 
+.sound-btn {
+  background: transparent;
+  border: none;
+  color: var(--chalk-soft);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 2px 8px;
+}
+ 
+.sound-btn.muted {
+  opacity: 0.4;
+}
+ 
+.board-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+ 
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  aspect-ratio: 1 / 1;
+  position: relative;
+}
+ 
+.board::before,
+.board::after,
+.board .vline1,
+.board .vline2 {
+  content: "";
+}
+ 
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-right: 2px solid rgba(244, 241, 230, 0.35);
+  border-bottom: 2px solid rgba(244, 241, 230, 0.35);
+}
+ 
+.cell:nth-child(3n) { border-right: none; }
+.cell:nth-child(n+7) { border-bottom: none; }
+ 
+.cell svg {
+  width: 55%;
+  height: 55%;
+  overflow: visible;
+}
+ 
+.cell .mark-x {
+  stroke: var(--x-color);
+}
+ 
+.cell .mark-o {
+  stroke: var(--o-color);
+}
+ 
+.cell path,
+.cell circle {
+  fill: none;
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 140;
+  stroke-dashoffset: 140;
+  animation: draw 0.28s ease forwards;
+}
+ 
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+ 
+.board.shake {
+  animation: shake 0.3s ease;
+}
+ 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+ 
+.win-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+ 
+#winLinePath {
+  stroke: var(--accent);
+  stroke-width: 0.07;
+  stroke-linecap: round;
+  stroke-dasharray: 4;
+  stroke-dashoffset: 4;
+  transition: stroke-dashoffset 0.35s ease;
+}
+ 
+#winLinePath.show {
+  stroke-dashoffset: 0;
+}
+ 
+.status {
+  font-size: 0.95rem;
+  color: var(--chalk-soft);
+  margin: 20px 0 14px;
+  min-height: 1.3em;
+}
+ 
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--chalk-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+ 
+.link-btn:hover {
+  color: var(--chalk);
+}
+ 
+.final-tally {
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
+  margin: 0 0 24px;
+}
+ 
+.dust-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+ 
+.dust {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--chalk);
+  opacity: 0.8;
+  animation: dustFall 0.6s ease-out forwards;
+}
+ 
+@keyframes dustFall {
+  to {
+    transform: translate(var(--dx), var(--dy)) scale(0.3);
+    opacity: 0;
+  }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+ 
