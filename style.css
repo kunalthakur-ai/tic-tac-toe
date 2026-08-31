@@ -290,8 +290,10 @@ body {
   transition: stroke-dashoffset 0.35s ease;
 }
  
-#winLinePath.show {
+#winLine.show #winLinePath {
   stroke-dashoffset: 0;
+}
+
 }
  
 .status {
