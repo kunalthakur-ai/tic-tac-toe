@@ -12,7 +12,8 @@ const statusEl = document.getElementById('status');
 const roundLabelEl = document.getElementById('roundLabel');
 const scoreXEl = document.getElementById('scoreX');
 const scoreOEl = document.getElementById('scoreO');
-const winLine = document.getElementById('winLinePath');
+const winLine = document.getElementById('winLine');
+const winLinePath = document.getElementById('winLinePath');
 const soundBtn = document.getElementById('soundBtn');
 const newMatchBtn = document.getElementById('newMatchBtn');
  
@@ -112,15 +113,36 @@ function handleCellClick(i, cellEl) {
   playTone(current === 'X' ? 520 : 390);
  
   const winningCombo = getWinningCombo();
-  if (winningCombo) {
-    active = false;
-    scores[current]++;
-    updateScoreUI();
-    drawWinLine(winningCombo);
-    statusEl.textContent = `player ${current.toLowerCase()} wins this round`;
-    playTone(700, 0.18);
-    setTimeout(nextRoundOrEnd, 1300);
-    return;
+  function drawWinLine(combo) {
+  const [a, , c] = combo;
+
+  const ax = (a % 3) + 0.5;
+  const ay = Math.floor(a / 3) + 0.5;
+
+  const cx = (c % 3) + 0.5;
+  const cy = Math.floor(c / 3) + 0.5;
+
+  winLinePath.setAttribute('x1', ax);
+  winLinePath.setAttribute('y1', ay);
+  winLinePath.setAttribute('x2', cx);
+  winLinePath.setAttribute('y2', cy);
+
+  requestAnimationFrame(() => {
+    winLine.classList.add('show');
+  });
+}
+
+
+  winLinePath.setAttribute('x1', ax);
+  winLinePath.setAttribute('y1', ay);
+  winLinePath.setAttribute('x2', cx);
+  winLinePath.setAttribute('y2', cy);
+
+  requestAnimationFrame(() => {
+    winLine.classList.add('show');
+  });
+}
+
   }
  
   if (!board.includes('')) {
