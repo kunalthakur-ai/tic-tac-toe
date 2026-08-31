@@ -1,1 +1,70 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+  <main class="wrap">
+ 
+    <section id="startScreen" class="panel">
+      <h1 class="title">Tic Tac Toe</h1>
+      <p class="subtitle">pick how long you want to play</p>
+ 
+      <div class="rounds-picker" id="roundsPicker">
+        <button class="round-btn" data-rounds="3">3<span>rounds</span></button>
+        <button class="round-btn" data-rounds="5">5<span>rounds</span></button>
+        <button class="round-btn" data-rounds="10">10<span>rounds</span></button>
+      </div>
+ 
+      <button id="startBtn" class="primary-btn" disabled>Start match</button>
+    </section>
+ 
+    <section id="gameScreen" class="panel hidden">
+ 
+      <div class="scorebar">
+        <div class="score-side x-side">
+          <span class="score-label">X</span>
+          <span class="score-num" id="scoreX">0</span>
+        </div>
+        <div class="round-info">
+          <span id="roundLabel">round 1 of 3</span>
+          <button id="soundBtn" class="sound-btn" aria-label="Toggle sound">&#9834;</button>
+        </div>
+        <div class="score-side o-side">
+          <span class="score-num" id="scoreO">0</span>
+          <span class="score-label">O</span>
+        </div>
+      </div>
+ 
+      <div class="board-wrap">
+        <div class="board" id="board"></div>
+        <svg id="winLine" viewBox="0 0 3 3" class="win-line" preserveAspectRatio="none">
+          <line id="winLinePath" x1="0" y1="0" x2="0" y2="0"/>
+        </svg>
+      </div>
+ 
+      <p class="status" id="status">player x's turn</p>
+ 
+      <button id="newMatchBtn" class="link-btn">start a new match</button>
+    </section>
+ 
+    <section id="endScreen" class="panel hidden">
+      <h2 class="title small" id="endTitle">match over</h2>
+      <p class="final-tally" id="finalTally">x 3 &ndash; 2 o</p>
+      <button id="playAgainBtn" class="primary-btn">play again</button>
+    </section>
+ 
+  </main>
+ 
+  <div id="dustLayer" class="dust-layer"></div>
+ 
+  <script src="script.js"></script>
+</body>
+</html>
+ 
