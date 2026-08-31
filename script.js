@@ -1,34 +1,33 @@
 // script.js — Tic Tac Toe with match rounds, scoring, and fun feedback
- 
+
 const startScreen = document.getElementById('startScreen');
 const gameScreen = document.getElementById('gameScreen');
 const endScreen = document.getElementById('endScreen');
- 
+
 const roundsPicker = document.getElementById('roundsPicker');
 const startBtn = document.getElementById('startBtn');
- 
+
 const boardEl = document.getElementById('board');
 const statusEl = document.getElementById('status');
 const roundLabelEl = document.getElementById('roundLabel');
 const scoreXEl = document.getElementById('scoreX');
 const scoreOEl = document.getElementById('scoreO');
-const winLine = document.getElementById('winLine');
-const winLinePath = document.getElementById('winLinePath');
+const winLine = document.getElementById('winLinePath');
 const soundBtn = document.getElementById('soundBtn');
 const newMatchBtn = document.getElementById('newMatchBtn');
- 
+
 const endTitle = document.getElementById('endTitle');
 const finalTally = document.getElementById('finalTally');
 const playAgainBtn = document.getElementById('playAgainBtn');
- 
+
 const dustLayer = document.getElementById('dustLayer');
- 
+
 const winningConditions = [
   [0, 1, 2], [3, 4, 5], [6, 7, 8],
   [0, 3, 6], [1, 4, 7], [2, 5, 8],
   [0, 4, 8], [2, 4, 6]
 ];
- 
+
 let matchLength = null;
 let scores = { X: 0, O: 0 };
 let round = 1;
@@ -37,9 +36,9 @@ let board = Array(9).fill('');
 let current = 'X';
 let active = false;
 let soundOn = true;
- 
+
 // ----- Start screen: round length selection -----
- 
+
 roundsPicker.addEventListener('click', (e) => {
   const btn = e.target.closest('.round-btn');
   if (!btn) return;
@@ -48,7 +47,7 @@ roundsPicker.addEventListener('click', (e) => {
   matchLength = parseInt(btn.dataset.rounds, 10);
   startBtn.disabled = false;
 });
- 
+
 startBtn.addEventListener('click', () => {
   if (!matchLength) return;
   scores = { X: 0, O: 0 };
@@ -59,9 +58,9 @@ startBtn.addEventListener('click', () => {
   updateScoreUI(true);
   startRound();
 });
- 
+
 // ----- Round lifecycle -----
- 
+
 function startRound() {
   board = Array(9).fill('');
   current = starter;
@@ -71,7 +70,7 @@ function startRound() {
   renderBoard();
   updateStatus();
 }
- 
+
 function renderBoard() {
   boardEl.innerHTML = '';
   boardEl.classList.remove('shake');
@@ -84,7 +83,7 @@ function renderBoard() {
     boardEl.appendChild(cell);
   });
 }
- 
+
 function markSVG(mark) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 100 100');
@@ -98,7 +97,7 @@ function markSVG(mark) {
   }
   return svg;
 }
- 
+
 function handleCellClick(i, cellEl) {
   if (!active) return;
   if (board[i]) {
@@ -106,56 +105,35 @@ function handleCellClick(i, cellEl) {
     setTimeout(() => boardEl.classList.remove('shake'), 300);
     return;
   }
- 
+
   board[i] = current;
   cellEl.appendChild(markSVG(current));
   spawnDust(cellEl);
   playTone(current === 'X' ? 520 : 390);
- 
+
   const winningCombo = getWinningCombo();
-  function drawWinLine(combo) {
-  const [a, , c] = combo;
-
-  const ax = (a % 3) + 0.5;
-  const ay = Math.floor(a / 3) + 0.5;
-
-  const cx = (c % 3) + 0.5;
-  const cy = Math.floor(c / 3) + 0.5;
-
-  winLinePath.setAttribute('x1', ax);
-  winLinePath.setAttribute('y1', ay);
-  winLinePath.setAttribute('x2', cx);
-  winLinePath.setAttribute('y2', cy);
-
-  requestAnimationFrame(() => {
-    winLine.classList.add('show');
-  });
-}
-
-
-  winLinePath.setAttribute('x1', ax);
-  winLinePath.setAttribute('y1', ay);
-  winLinePath.setAttribute('x2', cx);
-  winLinePath.setAttribute('y2', cy);
-
-  requestAnimationFrame(() => {
-    winLine.classList.add('show');
-  });
-}
-
+  if (winningCombo) {
+    active = false;
+    scores[current]++;
+    updateScoreUI();
+    drawWinLine(winningCombo);
+    statusEl.textContent = `player ${current.toLowerCase()} wins this round`;
+    playTone(700, 0.18);
+    setTimeout(nextRoundOrEnd, 1300);
+    return;
   }
- 
+
   if (!board.includes('')) {
     active = false;
     statusEl.textContent = "it's a draw";
     setTimeout(nextRoundOrEnd, 1000);
     return;
   }
- 
+
   current = current === 'X' ? 'O' : 'X';
   updateStatus();
 }
- 
+
 function getWinningCombo() {
   for (const combo of winningConditions) {
     const [a, b, c] = combo;
@@ -165,7 +143,7 @@ function getWinningCombo() {
   }
   return null;
 }
- 
+
 function drawWinLine(combo) {
   const [a, , c] = combo;
   const ax = (a % 3) + 0.5, ay = Math.floor(a / 3) + 0.5;
@@ -176,11 +154,11 @@ function drawWinLine(combo) {
   winLine.setAttribute('y2', cy);
   requestAnimationFrame(() => winLine.classList.add('show'));
 }
- 
+
 function updateStatus() {
   statusEl.textContent = `player ${current.toLowerCase()}'s turn`;
 }
- 
+
 function updateScoreUI(skipBump) {
   scoreXEl.textContent = scores.X;
   scoreOEl.textContent = scores.O;
@@ -190,7 +168,7 @@ function updateScoreUI(skipBump) {
     setTimeout(() => el.classList.remove('bump'), 200);
   }
 }
- 
+
 function nextRoundOrEnd() {
   if (round >= matchLength) {
     endMatch();
@@ -200,11 +178,11 @@ function nextRoundOrEnd() {
     startRound();
   }
 }
- 
+
 function endMatch() {
   gameScreen.classList.add('hidden');
   endScreen.classList.remove('hidden');
- 
+
   if (scores.X === scores.O) {
     endTitle.textContent = "it's a tie match";
   } else {
@@ -213,7 +191,7 @@ function endMatch() {
   }
   finalTally.textContent = `x ${scores.X} \u2013 ${scores.O} o`;
 }
- 
+
 playAgainBtn.addEventListener('click', () => {
   endScreen.classList.add('hidden');
   startScreen.classList.remove('hidden');
@@ -221,7 +199,7 @@ playAgainBtn.addEventListener('click', () => {
   startBtn.disabled = true;
   document.querySelectorAll('.round-btn').forEach(b => b.classList.remove('selected'));
 });
- 
+
 newMatchBtn.addEventListener('click', () => {
   gameScreen.classList.add('hidden');
   startScreen.classList.remove('hidden');
@@ -229,9 +207,9 @@ newMatchBtn.addEventListener('click', () => {
   startBtn.disabled = true;
   document.querySelectorAll('.round-btn').forEach(b => b.classList.remove('selected'));
 });
- 
+
 // ----- Fun extras: chalk dust and sound -----
- 
+
 function spawnDust(cellEl) {
   const rect = cellEl.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
@@ -249,7 +227,7 @@ function spawnDust(cellEl) {
     dot.addEventListener('animationend', () => dot.remove());
   }
 }
- 
+
 let audioCtx = null;
 function playTone(freq, duration = 0.09) {
   if (!soundOn) return;
@@ -268,10 +246,9 @@ function playTone(freq, duration = 0.09) {
     // audio not available, fail silently
   }
 }
- 
+
 soundBtn.addEventListener('click', () => {
   soundOn = !soundOn;
   soundBtn.classList.toggle('muted', !soundOn);
   soundBtn.innerHTML = soundOn ? '&#9834;' : '&#9834;&#x336;';
 });
- 
